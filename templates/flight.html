@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+
+
+{% block title %} Home {% endblock %}
+
+
+
+{% block body %}
+
+<style>
+
+.alert-error {
+  background-color: #FF6347;
+  color: black;
+}
+
+.alert-success {
+  background-color: #98FB98;
+  color: black;
+}
+
+
+</style>>
+<center>
+    <a href="/"><button class="tablink">Tickets</button></a>
+    <a href="flight" ><button class="tablink" style="background:rgb(70,130,180); color: white">Flights</button></a>
+    <a href="airport"><button class="tablink">Airports</button></a>
+    <a href="airline"><button class="tablink">Airlines</button></a>
+    <a href="passenger"><button class="tablink">Passengers</button></a>
+    <a href="passengerDetails"><button class="tablink">Passenger_Details</button></a>
+    <a href="topCountries"><button class="tablink">Top Visited Countries</button></a>
+    <a href="leastCountries"><button class="tablink">Least Visited Countries</button></a>
+    <a href="topMonths"><button class="tablink">Top Popular Months</button></a>
+</center>
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+
+            <div class="jumbotron p-3">
+
+                <h2>Manage <b>Flights </b>  <button type="button"  class="btn btn-success float-right"
+                data-toggle="modal" data-target="#mymodal">Adauga un zbor</button> </h2>
+
+
+                 {% with messages = get_flashed_messages(with_categories=True) %}
+
+                {% if messages %}
+
+                {% for category,message in messages %}
+
+                <div class="alert alert-{{category}}" role="alert">
+
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+
+                        <span aria-hidden="true">x</span>
+
+                    </button>
+
+
+                {{message}}
+
+
+                </div>
+
+
+                {% endfor %}
+
+                {% endif %}
+                {% endwith %}
+
+
+                <table class="table table-hover table-dark">
+
+                    <tr>
+
+                        <th>FlightNumber</th>
+                        <th>DepartureTime</th>
+                        <th>ArrivalTime</th>
+                        <th>DistanceInKm</th>
+                        <th>AirportID_Departure</th>
+                        <th>AirportID_Arrival</th>
+                        <th>NumberOfSeats</th>
+                        <th>Airline_ID</th>
+                        <th>Action</th>
+                    </tr>
+
+
+                   {% for row in flights %}
+                    <tr>
+                        <td>{{row.FlightNumber}}</td>
+                        <td>{{row.DepartureTime}}</td>
+                        <td>{{row.ArrivalTime}}</td>
+                        <td>{{row.DistanceInKm}}</td>
+                        <td>{{row.AirportID_Departure}}</td>
+                        <td>{{row.AirportID_Arrival}}</td>
+                        <td>{{row.NumberOfSeats}}</td>
+                        <td>{{row.Airline_ID}}</td>
+                        <td>
+                            <a href="/deleteFlight/{{row.FlightNumber}}" class="btn btn-danger btn-xs" onclick="return confirm('Esti sigur ca vrei sa stergi zborul ?')">Sterge</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+            </div>
+
+
+                  <!-- Modal Add Flight-->
+
+
+<div id="mymodal" class="modal fade" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+
+            <h4 class="modal-title">Add Flight</h4>
+         </div>
+         <div class="modal-body">
+
+            <form action="{{url_for('insert_flight')}}" method="POST">
+
+                <div class="form-group">
+                  <label>Departure Time: Format: dd.mm.yyyy hh:ss Ex: 01.02.2000 09:00</label>
+                  <input type="text" class="form-control" name="DepartureTime" required="1">
+                </div>
+
+                <div class="form-group">
+                  <label>Arrival Time: Format: dd.mm.yyyy hh:ss Ex: 01.02.2000 09:00</label>
+                  <input type="text" class="form-control" name="ArrivalTime" required="1">
+                </div>
+                <div class="form-group">
+                  <label>Distance (km):</label>
+                  <input type="number" class="form-control" name="DistanceInKm" required="1">
+                </div>
+                <div class="form-group">
+                  <label>AirportID Departure: (Icao_Code)</label>
+                  <input type="text" class="form-control" name="AirportID_Departure" required="1">
+                </div>
+                <div class="form-group">
+                  <label>AirportID Arrival: (Icao_Code)</label>
+                  <input type="text" class="form-control" name="AirportID_Arrival" required="1">
+                </div>
+                <div class="form-group">
+                  <label>Number of seats:</label>
+                  <input type="text" class="form-control" name="NumberOfSeats" required="1">
+                </div>
+                 <div class="form-group">
+                  <label>Airline ID:</label>
+                  <input type="text" class="form-control" name="Airline_ID" required="1">
+                </div>
+               <div class="form-group">
+                  <button class="btn btn-primary" type="submit">Add Flight</button>
+               </div>
+            </form>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         </div>
+
+
+      </div>
+
+
+   </div>
+
+
+</div>
+
+
+
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}
